@@ -12,11 +12,11 @@ and the Flutter guide for
 -->
 
 
-# Load More Pagination
+# Responsive Text Widget
 
-```responsive_text_widget```  Extensible and highly customizable package to help you lazily load and display small chunks of items as the user scrolls down the screen. ✨
+```responsive_text_widget```  Flutter package to make your texts Responsive. The Package will Assist you to calculate size of texts. Prevents text overflow without explicitly setting a fixed font size. ✨
 
-It's support any type of list view builder with endless scrolling pagination, lazy loading pagination, progressive loading pagination, etc.
+It's support any type of texts you want to show such as [ headline, bodytext, subtitle text or caption text], etc.
 
 
 ## Installation
@@ -54,19 +54,17 @@ For help getting started with Flutter, view the online [documentation](https://f
 ## Usage
 
 ```dart
-void main() => runApp(const MyApp());
-
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pagination Demo',
+      title: 'Responsive Text',
       theme: ThemeData(
-        primarySwatch: Colors.red,
-        platform: TargetPlatform.iOS,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
       home: const MyHomePage(),
     );
@@ -74,77 +72,70 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    Key? key,
-
-  }) : super(key: key);
-
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  List<int> productList = [];
-  bool isFinishLoadMore = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void initiateList() {
-    productList.addAll(List.generate(10, (v) => v));
-    setState(() {});
-  }
-
-  Future<bool> _loadMoreData() async {
-    await Future.delayed(const Duration(seconds: 2));
-    initiateList();
-    if(productList.length>=30){
-      isFinishLoadMore = true;
-    }
-    return true;
-  }
-
-  Future<void> _refresh() async {
-    await Future.delayed(const Duration(seconds: 2));
-    productList.clear();
-    isFinishLoadMore = false;
-    initiateList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Load More List"),
+        title: const Text("Responsive Text Widget"),
       ),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: LoadMorePagination(
-          isFinish: isFinishLoadMore,
-          onLoadMorePagination: _loadMoreData,
-          loaderColor: Colors.green,
-          whenEmptyLoad: true,
-          delegate: const DefaultLoadMorePaginationDelegate(),
-          textBuilder: DefaultLoadMorePaginationTextBuilder.english,
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text('Product ${index+1}'),
-                subtitle: const Text('Subtitle'),
-              );
-            },
-            itemCount: productList.length,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Row(
+                children: [
+                  Expanded(
+                    child: ResponsiveText(
+                      text: "Responsive Text",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        fontFamily: "open sans",
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ResponsiveText(
+                      text:
+                          "Flutter package to make your texts Responsive. The Package will Assist you to calculate size of texts.",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 30),
+              TextButton(
+                child: const ResponsiveText(
+                  text: "Text Button",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                onPressed: () async {},
+              )
+            ],
           ),
         ),
       ),
     );
   }
-
-
 }
 ```
 
@@ -153,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
 #### Basic
 
-| Parameter             | Default                                                        | Description                                                    | Required |
-|-----------------------|:---------------------------------------------------------------|:---------------------------------------------------------------|:--------:|
-| child                 | -                                                              | ListView widget as a child.                                    |   true   |
-| onLoadMorePagination  | -                                                              | On load function for handling pagination.                      |   true   |
-| loaderColor           | -                                                              | Bottom CircularProgressIndicator loader color.                 |   true   |
-| isFinish              | false                                                          | is Finish book for handling load more end functionality.       |  false   |
+| Parameter    | Default                                                                                          | Description                                        | Required |
+|--------------|:-------------------------------------------------------------------------------------------------|:---------------------------------------------------|:--------:|
+| text         | -                                                                                                | Text widget required text                          |   True   |
+| textStyle    | const TextStyle(color: Colors.black)                                                             | Style properties for text style                    |  false   |
+| textAlign    | TextAlign.center                                                                                 | Align the text on the left right, center, top edge |  false   |
+| textOverflow | TextOverflow.visible                                                                             | Clip the overflowing text to fix its container.    |  false   |
